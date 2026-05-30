@@ -4,9 +4,11 @@ interface UseKeyboardProps {
 	setInput: React.Dispatch<React.SetStateAction<string>>;
 	resetTest: () => void;
 	textLength: number;
+	currentText: string;
+	autoSpace: boolean;
 }
 
-export const useKeyboard = ({ setInput, resetTest, textLength }: UseKeyboardProps) => {
+export const useKeyboard = ({ setInput, resetTest, textLength, currentText, autoSpace }: UseKeyboardProps) => {
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.metaKey || event.ctrlKey || event.altKey) {
@@ -32,7 +34,25 @@ export const useKeyboard = ({ setInput, resetTest, textLength }: UseKeyboardProp
 
 			if (event.key.length === 1) {
 				event.preventDefault();
-				setInput((prev) => (prev.length < textLength ? prev + event.key : prev));
+				setInput((prev) => {
+					if (prev.length >= textLength) return prev;
+
+					if (autoSpace && event.key === " " && prev.endsWith(" ") && currentText[prev.length] !== " ") {
+						return prev;
+					}
+
+					let newString = prev + event.key;
+
+					if (
+						autoSpace &&
+						currentText[prev.length] === event.key &&
+						currentText[prev.length + 1] === " "
+					) {
+						newString += " ";
+					}
+
+					return newString.length <= textLength ? newString : prev + event.key;
+				});
 			}
 		};
 
@@ -41,5 +61,5 @@ export const useKeyboard = ({ setInput, resetTest, textLength }: UseKeyboardProp
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [resetTest, setInput, textLength]);
+	}, [resetTest, setInput, textLength, currentText, autoSpace]);
 };

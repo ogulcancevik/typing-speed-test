@@ -24,8 +24,10 @@ interface TypingTestContextValue {
 	currentText: string;
 	isFinished: boolean;
 	metrics: TypingTestMetrics;
+	autoSpace: boolean;
 	resetTest: () => void;
 	updateDifficulty: (difficulty: Difficulty) => void;
+	setAutoSpace: (value: boolean) => void;
 }
 
 const STORAGE_KEY = "difficulty";
@@ -54,6 +56,10 @@ export const TypingTestProvider = ({ children }: { children: ReactNode }) => {
 	);
 	const [startTime, setStartTime] = useState<number | null>(null);
 	const [endTime, setEndTime] = useState<number | null>(null);
+	const [autoSpace, setAutoSpace] = useState<boolean>(() => {
+		const stored = localStorage.getItem("autoSpace");
+		return stored === null ? false : stored === "true";
+	});
 
 	const currentText = DATA[difficulty][textIndex].text;
 	const isFinished =
@@ -84,6 +90,10 @@ export const TypingTestProvider = ({ children }: { children: ReactNode }) => {
 	}, [difficulty]);
 
 	useEffect(() => {
+		localStorage.setItem("autoSpace", String(autoSpace));
+	}, [autoSpace]);
+
+	useEffect(() => {
 		if (input.length === 1 && startTime === null) {
 			setStartTime(Date.now());
 		}
@@ -93,7 +103,13 @@ export const TypingTestProvider = ({ children }: { children: ReactNode }) => {
 		}
 	}, [endTime, input.length, isFinished, startTime]);
 
-	useKeyboard({ setInput, resetTest, textLength: currentText.length });
+	useKeyboard({
+		setInput,
+		resetTest,
+		textLength: currentText.length,
+		currentText,
+		autoSpace,
+	});
 
 	const metrics = useMemo(() => {
 		if (!isFinished || startTime === null || endTime === null) {
@@ -125,8 +141,10 @@ export const TypingTestProvider = ({ children }: { children: ReactNode }) => {
 			currentText,
 			isFinished,
 			metrics,
+			autoSpace,
 			resetTest: () => resetTest(),
 			updateDifficulty,
+			setAutoSpace,
 		}),
 		[
 			currentText,
@@ -134,6 +152,7 @@ export const TypingTestProvider = ({ children }: { children: ReactNode }) => {
 			input,
 			isFinished,
 			metrics,
+			autoSpace,
 			resetTest,
 			updateDifficulty,
 		],
