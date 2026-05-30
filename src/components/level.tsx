@@ -1,3 +1,4 @@
+import { cn } from "@/utils/cn";
 import type { Difficulty } from "../context/typing-test-context";
 
 interface LevelProps {
@@ -14,11 +15,12 @@ export const Level = ({ onClick, difficulty }: LevelProps) => {
 					key={level}
 					tabIndex={-1}
 					onClick={() => onClick(level)}
-					className={`cursor-pointer px-5 py-2 rounded-lg text-sm font-semibold capitalize transition-all ${
+					className={cn(
+						"cursor-pointer px-5 py-2 rounded-lg text-sm font-semibold capitalize transition-all",
 						difficulty === level
 							? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-neutral-100"
-							: "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
-					}`}
+							: "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300",
+					)}
 				>
 					{level}
 				</button>
