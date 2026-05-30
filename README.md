@@ -1,5 +1,7 @@
 # Typing Speed Test
 
+**Live Demo:** [https://react-typing-speed-test.netlify.app](https://react-typing-speed-test.netlify.app)
+
 A modern, minimalist typing speed test application built with **React**, **TypeScript**, and **Tailwind CSS**. Designed to help you practice and improve your typing skills with real-time metrics and an intuitive interface.
 
 ## 🚀 Features
