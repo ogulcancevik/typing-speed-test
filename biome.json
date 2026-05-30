@@ -15,7 +15,10 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"suspicious": {
+				"noArrayIndexKey": "off"
+			}
 		}
 	},
 	"javascript": {
@@ -23,6 +26,7 @@
 			"quoteStyle": "double"
 		}
 	},
+	
 	"assist": {
 		"enabled": true,
 		"actions": {
