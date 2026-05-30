@@ -1,5 +1,13 @@
-import { useId, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+	useEffect,
+	useId,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import { getCharStates } from "@/helpers/get-char";
+import { useTypingTest } from "../context/typing-test-context";
 
 export const TypeArea = ({ text, input }: { text: string; input: string }) => {
 	const states = getCharStates(text, input);
@@ -9,6 +17,47 @@ export const TypeArea = ({ text, input }: { text: string; input: string }) => {
 	const [caretStyle, setCaretStyle] = useState({ left: 0, top: 0, height: 0 });
 	const chars = useMemo(() => text.split(""), [text]);
 	const activeIndex = Math.min(input.length, chars.length);
+	const { setInput, autoSpace } = useTypingTest();
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		inputRef.current?.focus();
+	}, []);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const val = e.target.value;
+
+		if (val.length === input.length + 1) {
+			const addedChar = val.at(-1);
+
+			if (
+				autoSpace &&
+				addedChar === " " &&
+				input.endsWith(" ") &&
+				text[input.length] !== " "
+			) {
+				return;
+			}
+
+			let newVal = val;
+			if (
+				autoSpace &&
+				text[input.length] === addedChar &&
+				text[input.length + 1] === " "
+			) {
+				newVal += " ";
+			}
+
+			if (newVal.length <= text.length) {
+				setInput(newVal);
+			}
+			return;
+		}
+
+		if (val.length <= text.length) {
+			setInput(val);
+		}
+	};
 
 	const cn = (state: "pending" | "correct" | "incorrect" | "untyped") => {
 		switch (state) {
@@ -24,7 +73,9 @@ export const TypeArea = ({ text, input }: { text: string; input: string }) => {
 	useLayoutEffect(() => {
 		const container = containerRef.current;
 		const isFinished = activeIndex === chars.length;
-		const activeChar = isFinished ? charRefs.current[chars.length - 1] : charRefs.current[activeIndex];
+		const activeChar = isFinished
+			? charRefs.current[chars.length - 1]
+			: charRefs.current[activeIndex];
 
 		if (!container || !activeChar) {
 			return;
@@ -34,7 +85,8 @@ export const TypeArea = ({ text, input }: { text: string; input: string }) => {
 		const charRect = activeChar.getBoundingClientRect();
 
 		setCaretStyle({
-			left: charRect.left - containerRect.left + (isFinished ? charRect.width : -2),
+			left:
+				charRect.left - containerRect.left + (isFinished ? charRect.width : -2),
 			top: charRect.top - containerRect.top + (charRect.height - 36) / 2,
 			height: 36,
 		});
@@ -43,8 +95,20 @@ export const TypeArea = ({ text, input }: { text: string; input: string }) => {
 	return (
 		<div
 			ref={containerRef}
-			className="relative mx-auto select-none whitespace-pre-wrap text-[32px] leading-relaxed tracking-wide"
+			onClick={() => inputRef.current?.focus()}
+			className="relative mx-auto select-none whitespace-pre-wrap text-[32px] leading-relaxed tracking-wide cursor-text"
 		>
+			<input
+				ref={inputRef}
+				type="text"
+				value={input}
+				onChange={handleChange}
+				className="absolute opacity-0 -z-10 w-0 h-0"
+				autoComplete="off"
+				autoCorrect="off"
+				autoCapitalize="off"
+				spellCheck="false"
+			/>
 			<div
 				className="pointer-events-none absolute w-0.5 rounded-full bg-blue-500 transition-all duration-150 ease-out animate-pulse"
 				style={{

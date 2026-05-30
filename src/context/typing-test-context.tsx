@@ -28,6 +28,7 @@ interface TypingTestContextValue {
 	resetTest: () => void;
 	updateDifficulty: (difficulty: Difficulty) => void;
 	setAutoSpace: (value: boolean) => void;
+	setInput: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const STORAGE_KEY = "difficulty";
@@ -145,6 +146,7 @@ export const TypingTestProvider = ({ children }: { children: ReactNode }) => {
 			resetTest: () => resetTest(),
 			updateDifficulty,
 			setAutoSpace,
+			setInput,
 		}),
 		[
 			currentText,
