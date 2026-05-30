@@ -19,7 +19,7 @@ export const Header = () => {
 				<button
 					type="button"
 					onClick={() => setAutoSpace(!autoSpace)}
-					className={`text-sm font-medium px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+					className={`text-sm font-medium px-3 py-1.5 rounded-md cursor-pointer ${
 						autoSpace
 							? "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
 							: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"

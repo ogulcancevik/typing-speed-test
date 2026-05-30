@@ -27,7 +27,7 @@ const AppContent = () => {
 	} = useTypingTest();
 
 	return (
-		<div className="flex h-svh flex-col bg-[#f5f5f5] text-neutral-800 dark:bg-[#0f0f11] dark:text-neutral-200 transition-colors duration-300">
+		<div className="flex h-svh flex-col bg-[#f5f5f5] text-neutral-800 dark:bg-[#0f0f11] dark:text-neutral-200">
 			<div className="container mx-auto px-6 flex-1 flex flex-col max-w-6xl relative">
 				<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-blue-500/5 dark:bg-blue-500/10 blur-[120px] rounded-full pointer-events-none -z-10" />
 				<Header />

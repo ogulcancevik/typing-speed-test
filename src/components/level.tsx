@@ -16,7 +16,7 @@ export const Level = ({ onClick, difficulty }: LevelProps) => {
 					tabIndex={-1}
 					onClick={() => onClick(level)}
 					className={cn(
-						"cursor-pointer px-5 py-2 rounded-lg text-sm font-semibold capitalize transition-all",
+						"cursor-pointer px-5 py-2 rounded-lg text-sm font-semibold capitalize",
 						difficulty === level
 							? "bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-neutral-100"
 							: "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300",
